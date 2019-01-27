@@ -1,0 +1,19 @@
+{
+    "name": "horarios-interurbanos-madrid",
+    "version": "2.0.0",
+    "description": "Horarios interurbanos 724",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "alexa",
+        "horarios",
+        "bus"
+    ],
+    "author": "Juanjors",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "ask-sdk": "^2.0.0"
+    }
+}
