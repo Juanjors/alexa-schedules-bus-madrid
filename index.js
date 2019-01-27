@@ -1,15 +1,15 @@
 /* eslint-disable  no-console */
 
 const Alexa = require('ask-sdk-core');
-const horarios = require('./horarios.js');
+const schedules = require('./schedules.js');
 
 const SKILL_NAME = 'horario autobus';
-const HORARIO_SIGUIENTE = 'El siguiente autobús pasa a las: ';
+const NEXT_SCHEDULE = 'El siguiente autobús pasa a las: ';
 const HELP_MESSAGE = 'Te puedo ayudar a saber cuál será el siguiente autobús';
 const HELP_REPROMPT = '¿Cómo te puedo ayudar?';
 const STOP_MESSAGE = '!Adiós!';
 
-const GetHorarios = {
+const getSchedules = {
   canHandle(handlerInput) {
     const request = handlerInput.requestEnvelope.request;
     console.log({ request });
@@ -19,18 +19,17 @@ const GetHorarios = {
   },
   handle(handlerInput) {
     const date = new Date();
-    let horaActual = date.getHours();
-    let minutoActual = date.getMinutes();
-    const nextBus = getNextBus(date, isWeekend(date) ? horarios.WEEKENDS : horarios.WEEKDAYS);
-    function getNextBus(date, horarios) {
+    let currentHour = date.getHours() + 1; //Cutre workarond to get the timezone from Spain (Servers are located in Ireland)
+    let currentMinute = date.getMinutes();
+    const nextBus = getNextBus(date, isWeekend(date) ? schedules.WEEKENDS : schedules.WEEKDAYS);
+    function getNextBus(date, schedules) {
       let nextBuses = [];
-      horarios.forEach(hora => {
-        const horaYMinutosHorario = hora.split(":");
-        let horaHorario = horaYMinutosHorario[0];
-        let minutoHorario = horaYMinutosHorario[1];
-
-        if (horaActual < horaHorario || ((horaActual == horaHorario) && minutoActual < minutoHorario)) {
-          nextBuses.push(`${horaHorario}:${minutoHorario}`);
+      schedules.forEach(hora => {
+        const timeAndMinutes = hora.split(":");
+        let timeSchedule = timeAndMinutes[0];
+        let minuteSchedule = timeAndMinutes[1];
+        if (currentHour < timeSchedule || ((currentHour == timeSchedule) && currentMinute < minuteSchedule)) {
+          nextBuses.push(`${timeSchedule}:${minuteSchedule}`);
         }
 
       });
@@ -43,7 +42,7 @@ const GetHorarios = {
     }
 
     return handlerInput.responseBuilder
-      .speak(HORARIO_SIGUIENTE + nextBus)
+      .speak(NEXT_SCHEDULE + nextBus)
       .withSimpleCard(SKILL_NAME, nextBus)
       .getResponse();
   },
@@ -123,7 +122,7 @@ const skillBuilder = Alexa.SkillBuilders.custom();
 
 exports.handler = skillBuilder
   .addRequestHandlers(
-    GetHorarios,
+    getSchedules,
     HelpHandler,
     ExitHandler,
     FallbackHandler,
