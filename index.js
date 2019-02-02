@@ -4,7 +4,7 @@ const Alexa = require('ask-sdk-core');
 const schedules = require('./schedules.js');
 
 const SKILL_NAME = 'horario autobus';
-const MORE_DATA = '¿Quieres saber mas información sobre los siguientes autobuses?'
+const MORE_DATA = '¿Quieres saber mas información sobre los siguientes autobuses?';
 const MORE_DATA_RESPONSE = 'Los siguientes autobuses son a las: ';
 const MORE_DATA_FAIL = 'No tengo datos de autobuses';
 const HELP_MESSAGE = 'Te puedo ayudar a saber cuál será el siguiente autobús';
@@ -22,7 +22,6 @@ const getSchedules = {
         && request.intent.name === 'GetHorariosIntent');
   },
   handle(handlerInput) {
-    const timestamp = handlerInput.requestEnvelope.request.timestamp;
     const date = new Date();
     let currentHour = date.getHours() + 1; //Cutre workarond to get the timezone from Spain (Servers are located in Ireland)
     let currentMinute = date.getMinutes();
